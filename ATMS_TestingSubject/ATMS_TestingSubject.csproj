@@ -184,6 +184,7 @@
     <Content Include="Views\UserInfo\Edit.cshtml" />
     <Content Include="Views\UserInfo\AdminDashboard.cshtml" />
     <Content Include="Views\UserInfo\Login.cshtml" />
+    <Content Include="Views\UserInfo\GetTicket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

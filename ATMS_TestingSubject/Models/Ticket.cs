@@ -17,6 +17,7 @@ namespace ATMS_TestingSubject.Models
         }
 
         [Key]
+        [Display(Name ="barcode")]
         public int RollNo { get; set; }
 
         public int? Id { get; set; }

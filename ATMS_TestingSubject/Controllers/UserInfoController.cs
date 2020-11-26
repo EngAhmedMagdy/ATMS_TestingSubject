@@ -15,9 +15,12 @@ namespace ATMS_TestingSubject.Controllers
     public class UserInfoController : Controller
     {
         private ATMS_Model db = new ATMS_Model();
+        private static int TicketNum ;
+        
         [HttpGet]
         public ActionResult Login()
         {
+            
             return View();
         }
         [HttpPost]
@@ -76,15 +79,7 @@ namespace ATMS_TestingSubject.Controllers
         // GET: UserInfo/Create
         public ActionResult Create()
         {
-            ViewBag.Type = new List<SelectListItem>() {
-                new SelectListItem(){Value="Employee",Text="Employee"},
-                new SelectListItem(){Value="Head of Department",Text="Head of Department"},
-                new SelectListItem(){Value="Admin",Text="Admin"}
-            };
-            ViewBag.Gender = new List<SelectListItem>() {
-                new SelectListItem(){Value="Male",Text="Male"},
-                new SelectListItem(){Value="Female",Text="Female"},
-            };
+        
             ViewBag.DepId = new SelectList(db.Departments, "DepId", "DepName");
             return View();
         }
@@ -163,6 +158,8 @@ namespace ATMS_TestingSubject.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             UserInfo userInfo = await db.UserInfoes.FindAsync(id);
+            Ticket ticket = db.Tickets.Single(x => x.Id == id);
+            db.Tickets.Remove(ticket);
             db.UserInfoes.Remove(userInfo);
             await db.SaveChangesAsync();
             return RedirectToAction("AdminDashboard");
@@ -175,6 +172,41 @@ namespace ATMS_TestingSubject.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult GetTicket(int Id)
+        {
+            var alltikects = db.Tickets.ToArray();
+            TimeSpan TicketAvailable;
+            TimeSpan? TimePassed;
+            TimeSpan.TryParse("24:00:00" , out TicketAvailable); //time needed to get another code
+            Ticket Newticket = new Ticket();
+            if(alltikects.Length > 0)
+            {
+                TicketNum = alltikects.Last().RollNo;
+            }
+            var OldTickets = alltikects.Where(x => x.Id == Id).ToArray();
+            if(OldTickets.Length >0)
+            {
+               TimePassed = DateTime.Now.TimeOfDay - OldTickets.Last().time;
+                
+               if (TimePassed < TicketAvailable )
+                {
+                    Response.Write("wait " +( TicketAvailable - TimePassed )+ " to get a second barcode");
+                    Response.Write("your last barcode is");
+
+                    return View(OldTickets.Last());
+                }
+
+            }
+            Newticket.RollNo = ++TicketNum;
+            Newticket.time = DateTime.Now.TimeOfDay;
+            Newticket.date = DateTime.Now.ToLocalTime();
+            Newticket.Id = Id;
+            db.Tickets.Add(Newticket);
+            db.SaveChanges();
+            Response.Write("your ticket number is "+ TicketNum);
+            return View(Newticket);
         }
     }
 }
