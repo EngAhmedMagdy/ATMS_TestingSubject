@@ -18,6 +18,12 @@ namespace ATMS_TestingSubject
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "UserInfo", action = "Login", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+               name: "Home",
+               url: "{controller}/{action}",
+               defaults: new { controller = "Home", action = "About" }
+           );
         }
     }
 }

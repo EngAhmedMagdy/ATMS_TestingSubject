@@ -6,6 +6,10 @@ namespace ATMS_TestingSubject.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    public enum States
+    {
+        Pending, Aprroved, NotApproved
+    }
     [Table("Leaving")]
     public partial class Leaving
     {

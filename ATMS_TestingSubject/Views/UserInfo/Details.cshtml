@@ -85,6 +85,9 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("barCode", "GetTicket", new { Id = Model.Id},new {@class="btn btn-default"}) | 
-    @Html.ActionLink( "LogOut","Login")
+    @Html.ActionLink("barCode", "GetTicket","Tickets", new { Id = Model.Id }, new { @class = "btn btn-default" }) |
+    @Html.ActionLink("Sign Attend","Create","Attendances",new { Id = Model.Id }, new { @class = "btn btn-default" } ) 
+
+
+    @Html.ActionLink("LogOut", "Login")
 </p>
